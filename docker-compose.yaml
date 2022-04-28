@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   p1-exporter:
@@ -9,8 +9,21 @@ services:
       driver: none
     restart: unless-stopped
     container_name: p1-exporter
+    environment:
+      - SERIAL_PORT=/dev/ttyuUSB0
+      - INFLUXDB_HOST=localhost
+      - INFLUXDB_PORT=8086
+      - INFLUXDB_USER=root
+      - INFLUXDB_PASS=/var/secrets/influxdb-password
+      - INFLUXDB_DB=energy
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
+    secrets:
+      - influxdb-password
+
+secrets:
+  influxdb-password:
+    file: /var/secrets/influxdb-password
 
 networks:
   default:
